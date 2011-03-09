@@ -1,0 +1,23 @@
+#!/usr/local/gauche/bin/gosh
+
+(define-module rdmms
+  (use srfi-1)
+  (export
+    ))
+(select-module rdmms)
+
+
+(define (main args)
+  ;; あとで
+  0)
+
+
+;;;===================================================================
+
+(select-module user)
+(define main (with-module rdmms main))
+
+;; Local variables:
+;; mode: scheme
+;; end:
+;; vim: set ft=scheme fenc=utf-8:
