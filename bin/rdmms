@@ -2,13 +2,45 @@
 
 (define-module rdmms
   (use srfi-1)
+  (use text.tree)
+  (use gauche.charconv)
+  (use gauche.sequence)
+  (use c-wrapper)
+  (c-load-library "libzmq.so")
+  (c-include "zmq.h")
+  (c-load-library "libuuid.so")
+  (c-include "uuid/uuid.h")
   (export
     ))
 (select-module rdmms)
 
+;; TODO: zmq回りはあとで別モジュールに分ける筈なので、
+;;       それを前提として手続き等を分離しておく事
+
+(define (generate-uuid-string)
+  (let ((uuid (make <uuid_t>))
+        (buf (make (c-array <c-char> 37)))
+        )
+    ;; #<c-array:c-uchar[16] #u8(...)>
+    (uuid_generate uuid)
+    (uuid_unparse uuid (ptr buf))
+    (x->string buf)))
+
+(define (get-words)
+  ;; TODO: ストレージを用意する必要がある
+  ;; TODO: ストレージに先にデータを入れておく必要がある
+  (tree->string
+    (list
+      "まだです\n"
+      (generate-uuid-string))))
 
 (define (main args)
   ;; あとで
+  ;; まず、最小で動くコードを書く必要がある。
+  ;; それは、どのような動作をするコード？
+  ;; - ストレージから格言をランダムに取り出し、printするだけのコード
+  ;; -- まだ重み付けやメタ情報の付与は考えなくてよい
+  (print (ces-convert (get-words) 'utf-8 'euc-jp))
   0)
 
 
